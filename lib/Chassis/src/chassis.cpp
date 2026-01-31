@@ -140,6 +140,11 @@ void Chassis::SetMotorEfforts(int16_t left, int16_t right)
 Twist Chassis::CalcOdomFromWheelMotion(void)
 {
     Twist velocity;
+    float leftVel = leftMotor.speed/LEFT_TICKS_PER_CM * 50.0; //the 50 is to get from ms to sec
+    float rightVel = rightMotor.speed/RIGHT_TICKS_PER_CM * 50.0;
+    velocity.u = (rightVel + leftVel) / 2.0;
+    velocity.omega = (rightVel - leftVel) / (ROBOT_RADIUS * 2);
+
     /**
      * TODO: Calculate velocities from wheel motion, which are held in leftMotor.spped and rightMotor.speed.
      * Note that you might want to calculate the deltas instead of speeds (to save some floating point maths). 

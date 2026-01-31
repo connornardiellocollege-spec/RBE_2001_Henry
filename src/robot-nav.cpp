@@ -6,6 +6,12 @@
 
 void Robot::UpdatePose(const Twist& twist)
 {
+    float prevTheta = currPose.theta;
+    currPose.theta = currPose.theta + twist.omega * 0.02; //using the encode loop sunning every 20 ms
+    float coolTheta = (prevTheta + currPose.theta)/2.0;
+    currPose.x = currPose.x + twist.u * cos(coolTheta) * 0.02; 
+    currPose.y = currPose.y + twist.u * sin(coolTheta) * 0.02;
+    
     /**
      * TODO: Add your FK algorithm to update currPose here.
      */
