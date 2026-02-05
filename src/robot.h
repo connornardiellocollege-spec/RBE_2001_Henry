@@ -14,7 +14,7 @@ protected:
         ROBOT_IDLE,
         ROBOT_DRIVE_TO_POINT,
     };
-    ROBOT_STATE robotState = ROBOT_IDLE;
+    ROBOT_STATE robotState = ROBOT_DRIVE_TO_POINT;
 
     /* Define the chassis*/
     Chassis chassis;

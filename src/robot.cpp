@@ -32,7 +32,11 @@ void Robot::RobotLoop(void)
     {
         // We do FK regardless of state
         UpdatePose(velocity);
-        chassis.SetMotorEfforts(220,-220);
+        if(currPose.x < (30) && currPose.x > (-30)){
+            chassis.SetMotorEfforts(248,277);
+        }else{
+            chassis.SetMotorEfforts(0, 0);
+        }
         
         /**
          * Here, we break with tradition and only call these functions if we're in the 

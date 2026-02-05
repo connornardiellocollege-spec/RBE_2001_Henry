@@ -7,10 +7,10 @@
 void Robot::UpdatePose(const Twist& twist)
 {
     float prevTheta = currPose.theta;
-    currPose.theta = currPose.theta + twist.omega * 0.02; //using the encode loop sunning every 20 ms
+    currPose.theta = currPose.theta + (twist.omega * 0.02)/1.318;
     float coolTheta = (prevTheta + currPose.theta)/2.0;
-    currPose.x = currPose.x + twist.u * cos(coolTheta) * 0.02; 
-    currPose.y = currPose.y + twist.u * sin(coolTheta) * 0.02;
+    currPose.x = currPose.x + twist.u * cos(coolTheta) * 0.02/1.318; 
+    currPose.y = currPose.y + twist.u * sin(coolTheta) * 0.02/1.318;
     
     /**
      * TODO: Add your FK algorithm to update currPose here.
@@ -56,17 +56,30 @@ void Robot::DriveToPoint(void)
 {
     if(robotState == ROBOT_DRIVE_TO_POINT)
     {
-        /**
-         * TODO: Add your IK algorithm here. 
-         */
+        float errorx = 40.0 - currPose.x; //destPose.x;
+        float errory = 40.0 - currPose.y; //destPose.y;
+        if(errorx < 2 && errorx > -2){
+            errorx = 0;
+        }
+        if(errory < 2 && errory > -2){
+            errory = 0;
+        } 
+        float errorDist = sqrt(errorx * errorx + errory * errory);
+        TeleplotPrint("errorx", errorx);
+        TeleplotPrint("errory", errory);
+        float errortheta = atan2(errory, errorx) - currPose.theta;
+        float distGain = 4.0;
+        float thetaGain = 40.0;
+        float vleft = distGain * errorDist - thetaGain * errortheta;
+        float vright = distGain * errorDist + thetaGain * errortheta;
+        
+
 
 #ifdef __NAV_DEBUG__
         // Print useful stuff here.
 #endif
 
-        /**
-         * TODO: Call chassis.SetMotorEfforts() to command the motion, based on your calculations above.
-         */
+        chassis.SetMotorEfforts(vleft, vright);
     }
 }
 
