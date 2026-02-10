@@ -32,11 +32,11 @@ void Robot::RobotLoop(void)
     {
         // We do FK regardless of state
         UpdatePose(velocity);
-        if(currPose.x < (30) && currPose.x > (-30)){
-            chassis.SetMotorEfforts(248,277);
-        }else{
-            chassis.SetMotorEfforts(0, 0);
-        }
+        // if(currPose.x < (30) && currPose.x > (-30)){
+        //     chassis.SetMotorEfforts(248,277);
+        // }else{
+        //     chassis.SetMotorEfforts(0, 0);
+        // }
         
         /**
          * Here, we break with tradition and only call these functions if we're in the 
@@ -49,6 +49,8 @@ void Robot::RobotLoop(void)
         {
             DriveToPoint();
             if(CheckReachedDestination()) HandleDestination();
+        }else if(robotState == ROBOT_IDLE){
+            chassis.SetMotorEfforts(0, 0);
         }
     }
 }
